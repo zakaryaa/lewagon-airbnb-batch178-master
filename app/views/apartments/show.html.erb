@@ -1,0 +1,172 @@
+<% content_for :title do %>
+    Airbnb <%= @apartment.name %>
+<% end %>
+
+<%= render "components/carousel" %>
+
+<div class="main-wrapper-show">
+
+  <div class="container">
+
+    <div class="row">
+      <div class="col-md-9">
+        <h2><%= @apartment.name %></h2>
+        <p><em><%= @apartment.address %></em></p>
+        <hr>
+        <h4>Description</h4>
+        <p><%=@apartment.description%></p>
+        <hr>
+        <h4>Room facilities</h4>
+        <p>
+            Lorem ipsum dolor sit amet, at omnes deseruisse pri. Quo aeterno legimus insolens ad. Sit cu detraxit constituam, an mel iudico constituto efficiendi.
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12 col-sm-6">
+        <ul class="list-unstyled">
+          <% @apartment.equips.first(4).each do |equip| %>
+          <li><i class="fas fa-check"></i> <%=equip.name.capitalize  %></li>
+          <% end %>
+         </ul>
+      </div>
+      <div class="col-xs-12 col-sm-6">
+        <ul class="list-unstyled">
+          <% @apartment.equips[4..8].each do |equip| %>
+          <li><i class="fas fa-check"></i> <%=equip.name.capitalize  %></li>
+          <% end %>
+        </ul>
+      </div>
+     </div><!-- End row  -->
+     <hr>
+     <div class="row">
+       <div class="col-xs-12">
+         <h4>Reviews</h4>
+         <hr>
+         <ul class="list-unstyled">
+            <%@apartment.appt_reviews.each do |review|   %>
+            <li>
+              <h6><% review.rating.times do %>
+                <i class="fas fa-star"></i>
+                <% end %>
+              </h6>
+              <p><%= review.comment %></p>
+            </li>
+            <hr>
+            <% end %>
+         </ul>
+       </div>
+     </div>
+  </div>
+  <!-- Booking Sidebar -->
+  <div class="booking-widget">
+    <div class="booking-widget-header">
+      <h4>Book your apartment today</h4>
+      <hr>
+      <h5><strong>Price: </strong>$<%= @apartment.price_per_day %>/day</h5>
+      <h5><strong>Service Fee: </strong>$<%= @apartment.service_fees %></h5>
+      <hr>
+    </div>
+      <form method="post" action="/apartments/<%= @apartment.id %>/bookings">
+          <ul class='booking-widget__form'>
+              <li>
+                  <label for='check-in'>Check in</label>
+                  <div id='check-in' class='form-field'>
+                      <input type="text" value="" name= 'booking[start_date]' placeholder="9 July, 2016">
+                      <div class='datepicker'><i class="fa fa-calendar" aria-hidden="true"></i></div>
+                  </div>
+              </li>
+              <li>
+                  <label for='check-in'>Check out</label>
+                  <div id='check-out' class='form-field'>
+                      <input type="text" value="" name= 'booking[end_date]' placeholder="19 July, 2016">
+                      <div class='datepicker'><i class="fa fa-calendar" aria-hidden="true"></i></div>
+                  </div>
+              </li>
+              <li>
+                  <div class='form__dropdown'>
+                      <label for='adultsAmount'>Guests</label>
+                      <div class='form-field'>
+                      <select id='adultsAmount'>
+                              <option value="1">1</option>
+                              <option value="2">2</option>
+                              <option value="3">3</option>
+                              <option value="4">4</option>
+                              <option value="5">5</option>
+                              <option value="6">6</option>
+                      </select>
+                      <div class='select-button'><i class="fa fa-caret-down" aria-hidden="true"></i></div>
+                  </div>
+                  </div>
+              </li>
+              <li>
+                  <!-- <in type="submit" id='bookingSubmit' class='form__submit' value='Book Now!' > -->
+                    <form role="form" id="formfield" action=/apartments/<%= @apartment.id %>/bookings" method="post"  enctype="multipart/form-data" onsubmit="return validateForm();">
+<input type="hidden" name="action" value="add_form" />
+
+
+
+            <input type="button" name="btn" value="Book Now" id="submitBtn" data-toggle="modal" data-target="#confirm-submit" class="btn btn-default" />
+
+</form>
+
+              </li>
+          </ul>
+      </form>
+  </div>
+
+</div>
+
+
+
+              <div class="modal fade" id="confirm-submit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              Confirm Reservation
+                          </div>
+                          <div class="modal-body">
+                              Are you sure you want to submit the following details?
+                              <table class="table">
+                                  <tr>
+                                      <th>Info Apartment</th>
+                                      <td id="lname"></td>
+                                  </tr>
+                                  <tr>
+                                      <th>First Name</th>
+                                      <td id="fname"></td>
+                                  </tr>
+                              </table>
+                          </div>
+                          <div class="modal-footer">
+                              <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                              <a href="#" id="submit" class="btn btn-success success">Submit</a>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+
+<!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+  Launch demo modal
+</button>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>  -->
